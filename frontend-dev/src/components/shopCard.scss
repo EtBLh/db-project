@@ -1,0 +1,32 @@
+.shop-card{
+    background-color: #333;
+    border-radius: 1rem;
+    border: 1px solid #555;
+    text-decoration: none;
+    color: white;
+    padding: .5rem 1rem;
+    width: 250px;
+    height: 60px;
+    margin-right: 1rem;
+    position: relative;
+    span{
+        display: block;
+        text-decoration: none;
+    }
+    filter: drop-shadow(0 0 1rem black);
+    .shop-name{
+        font-size: 1.7rem;
+        text-decoration: none;
+    }
+    .shop-class{
+        position: absolute;
+        right: 1rem;
+        top: .5rem;
+        color: #eee;
+        font-size: 1.2rem;
+    }
+    .shop-position{
+        color: #eee;
+        font-size: .8rem;
+    }
+}

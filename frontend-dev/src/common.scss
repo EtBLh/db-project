@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Racing+Sans+One&display=swap');
+
+$con-width: 800px;
+$con-pad: 1rem;
+
+body, html{
+    margin: 0;
+    padding: 0px;
+    font-size: 16px;
+    background-color: #0B0C10;
+    font-family: 'Lato', sans-serif;
+    color: #efefef;
+} 
+
+.container{
+    margin: 0 auto;
+    max-width: 90vw;
+    width: $con-width;
+    padding: 0 $con-pad;
+}
+
+header{
+    position: fixed;
+    display: block;
+    height: 56px;
+    width: $con-width;
+    padding: 0 $con-pad;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    h1{
+        font-family: 'Racing Sans One', cursive;
+        color: #66FCF1;
+        margin: 0;
+        margin-top: 1rem;
+    }
+    nav{
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        width: 50%;
+        right: 0;
+        top: 0;
+        height: 100%;
+        text-align: right;
+        align-items: center;
+        a {
+            height: 100%;
+            line-height: 56px;
+            font-size: 1.2rem;
+            margin-left: auto;
+            color: #ccc;
+            font-weight: 500;
+            text-decoration: none;
+        }
+    }
+}
+
+.header-gap{
+    display: block;
+    height: 56px;
+}

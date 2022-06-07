@@ -1,0 +1,40 @@
+.food-item{
+    width: 250px;
+    height: 100px;
+    position: relative;
+    .food-img{
+        width: 33%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .text-container{
+        width: 66%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    span{
+        display: block;
+        font-size: 1rem;
+    }
+    .food-name{
+        font-size: 1.5rem;
+    }
+    input{
+        width: 30%;
+    }
+}
+
+.food-item.add{
+    height: inherit;
+    font-size: 1.2rem;
+    .text-container{
+        width: 100%;
+        .food-name{
+            font-size: 1rem;
+        }
+    }
+}
