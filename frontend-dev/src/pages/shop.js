@@ -21,7 +21,7 @@ const Shop = () => {
 
     const getShopData = () => {
         asyncJsonFetch("https://ubereat.nycu.me/api/get_shop_data.php",{
-            uid: auth.uid, token: auth.token, sid: storeid
+            uid: auth.uid, token: auth.token, store: storeid
         }).then(body => {
             console.log("shopdata", body);
             setShopData(body);

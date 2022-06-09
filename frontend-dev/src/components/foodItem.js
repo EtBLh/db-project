@@ -22,8 +22,8 @@ const FoodItem = (prop) => {
     const delete_food = () => {
         asyncJsonFetch("https://ubereat.nycu.me/api/delete_food.php",{
             token: auth.token,
-            uid: auth.token,
-            name: prop.name
+            uid: auth.uid,
+            name: prop.food.name
         }).then(body => prop.update())
     }
 
@@ -31,8 +31,8 @@ const FoodItem = (prop) => {
         console.log(newData);
         asyncJsonFetch("https://ubereat.nycu.me/api/update_food.php",{
             token: auth.token,
-            uid: auth.token,
-            name: prop.name,
+            uid: auth.uid,
+            name: prop.food.name,
             price: newData.price,
             amount: newData.amount
         }).then(body => prop.update())

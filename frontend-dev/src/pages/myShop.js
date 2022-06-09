@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useDebugValue } from "react";
 import { useNavigate } from "react-router";
 import FileBase64 from 'react-file-base64';
 
@@ -30,11 +30,21 @@ const MyShop = () => {
         thumbnail: ""
     }
     const [newFood, setNewFood] = useState(initialNewFood);
+    const [shopNameValidMsg, setShopNameValidMsg] = useState("");
 
     const newShopDataChange = (sdtype, value) => {
         let newState = {...newShopData}; //clone input obj
         newState[sdtype] = value;
         setNewShopData(newState);
+        // if (sdtype == "name"){
+        //     asyncJsonFetch("https://ubereat.nycu.me/check_storename_valid.php",{
+        //         uid: auth.uid, token: auth.token, name: value
+        //     }).then(body => {
+        //         if (body.exist) setShopNameValidMsg("already exists.");
+        //         else setShopNameValidMsg("not exist.");
+        //         console.log(body);
+        //     })
+        // }
     }
 
     const newFoodChange = (ftype, value) => {
@@ -145,7 +155,7 @@ const MyShop = () => {
                 {"you dont have a shop, create a new one?"}
                 <br/>
                 <label>shop name:</label><input id="new-shop-name" value={shopData.name}
-                    onChange={e => newShopDataChange("name", e.target.value)}/><br/>
+                    onChange={e => newShopDataChange("name", e.target.value)}/>{shopNameValidMsg}<br/>
                 <label>shop longtitude:</label><input id="new-shop-long" value={shopData.long}
                     onChange={e => newShopDataChange("long", e.target.value)}/><br/>
                 <label>shop latitude:</label><input id="new-shop-lat" value={shopData.lat}

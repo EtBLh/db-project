@@ -60,7 +60,7 @@ if (!is_numeric($postdata->long) || !is_numeric($postdata->lat)){
     ));
     exit();
 }
-//check if account exists
+// check if account exists
 $fiae = $conn->prepare('SELECT * from user WHERE account = ?');
 $fiae->bind_param('s', $postdata->ac);
 $fstatus = $fiae->execute();

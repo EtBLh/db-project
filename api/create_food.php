@@ -1,10 +1,20 @@
 <?php
 
+/*
+1:
+2: empty entry
+3: price format error
+4: name format error
+5: amount format error
+6: image format error
+*/
+
 require_once("includes/db_connect.php");
 require_once("includes/tokengen.php");
 require_once("includes/restful_json.php");
 
 $reqdata = json_req_body();
+
 if (!$reqdata->token || !$reqdata->uid){
     json_res([
         "data" => var_export($reqdata, true)
@@ -13,6 +23,30 @@ if (!$reqdata->token || !$reqdata->uid){
 }
 if (!check_token($reqdata->token, $reqdata->uid)) {
     json_res($reqdata);
+    exit();
+}
+if (!$reqdata->thumbnail || !$reqdata->price || !$reqdata->amount || !$reqdata->name) {
+    json_res([
+        "status" => 2
+    ]);
+    exit;
+}
+if (!preg_match('/^[0-9]+$/',$reqdata->price)) {
+    json_res([
+        "status" => 3
+    ]);
+    exit();
+}
+if (!preg_match('/^[0-9a-zA-Z]+$/',$reqdata->name)) {
+    json_res([
+        "status" => 4
+    ]);
+    exit();
+}
+if (!preg_match('/^[0-9]+$/',$reqdata->amount)) {
+    json_res([
+        "status" => 5
+    ]);
     exit();
 }
 

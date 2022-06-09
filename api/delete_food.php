@@ -12,7 +12,9 @@ if (!$reqdata->token || !$reqdata->uid){
     exit();
 }
 if (!check_token($reqdata->token, $reqdata->uid)) {
-    json_res($reqdata);
+    json_res([
+        "status" => 456
+    ]);
     exit();
 }
 

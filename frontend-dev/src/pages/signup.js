@@ -1,5 +1,6 @@
 import '../common.scss';
 import { useState } from "react";
+import asyncJsonFetch from '../func/asyncJsonFetch';
 
 const Signup = () => {
     const [input, setInput] = useState({
@@ -12,6 +13,8 @@ const Signup = () => {
         lat: 0,
         pwc: ""
     });
+    const [acValidMsg, setAcValidMsg] = useState("ok");
+
     const errorMsg = [  '',
                         'unknown error',
                         'empty field exists',
@@ -51,12 +54,26 @@ const Signup = () => {
         let newState = {...input}; //clone input obj
         newState[item] = value;
         setInput(newState);
+        if (item === "ac"){
+            asyncJsonFetch("https://ubereat.nycu.me/api/check_account_valid.php",{
+                "ac": value
+            }).then(body => {
+                if (body.status == 0 && body.exist){
+                    setAcValidMsg("ac already exists :(");
+                } else if (body.status == 2){
+                    setAcValidMsg("ac empty :(");
+                } else {
+                    setAcValidMsg("ok!");
+                }
+                console.log(body);
+            })
+        }
     }
 
     return <>
         <div className="container">
             <label>account</label>
-            <input type="text" onChange={ev=>inputChange("ac",ev.target.value)} value={input.ac} />
+            <input type="text" onChange={ev=>inputChange("ac",ev.target.value)} value={input.ac} />{acValidMsg}
             <br/>
             <label>password</label>
             <input type="password" onChange={ev=>inputChange("pw",ev.target.value)} value={input.pw} />
