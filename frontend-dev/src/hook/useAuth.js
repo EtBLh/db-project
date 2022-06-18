@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { selectUserData, _login, _logout } from "../stores/userData";
 import { useSelector, useDispatch } from "react-redux";
@@ -6,42 +6,47 @@ import asyncJsonFetch from "../func/asyncJsonFetch";
 
 //integrate redux and cookies
 function useAuth() {
-    const auth = useSelector(selectUserData); 
+    const userData = useSelector(selectUserData); 
     const dispatch = useDispatch();
     const [cookies, setCookies, removeCookies] = useCookies();
 
-    const syncCookieRedux = () => {
-        if (!auth.login && cookies['auth']){
+    const syncCookieWithRedux = () => {
+        let {uid, token, login} = userData;
+        if (!login && cookies['auth']){
             dispatch(_login(cookies['auth']));
-            return;
+            return cookies['auth'];
         }
-        if (auth.login && !cookies['auth']){
+        if (login && !cookies['auth']){
             setCookies('auth',{
-                uid: auth.uid,
-                token: auth.token
+                uid: uid,
+                token: token
             });
-            return;
+            return {uid, token};
         }
-        if (auth.token && auth.token !== cookies['auth'].token){
+        if (login && token !== cookies['auth'].token){
             setCookies('auth',{
-                uid: auth.uid,
-                token: auth.token
+                uid: uid,
+                token: token
             });
+            return {uid, token};
         }
+        return {uid, token};
     }
 
+    useEffect(() => {syncCookieWithRedux()}, []);
+
     const checkAuth = async () => {
-        syncCookieRedux();
+        let {uid, token} = syncCookieWithRedux();
         let result = await asyncJsonFetch("https://ubereat.nycu.me/api/check_login.php",{
-            uid: auth.uid,
-            token: auth.token
+            uid: uid,
+            token: token
         })
         .then(body => {
+            // console.log('auth', body["result"], userData, cookies['auth'])
             if (!body["result"]){
                 removeCookies('auth');
-                dispatch(_logout);
+                logout();
             }
-            console.log("login", body["result"]);
             return body["result"];
         });
         return result;
@@ -64,14 +69,18 @@ function useAuth() {
             },
             method: "POST",
             body: JSON.stringify({
-                uid: auth.uid
+                uid: userData.uid
             })
         });
-        dispatch(_logout);
+        dispatch(_logout());
         removeCookies('auth');
     };
 
-    return [login, logout, checkAuth, auth];
+    return [login, logout, checkAuth, {
+        uid: userData.uid,
+        token: userData.token,
+        login: userData.login
+    }];
 }
 
 export default useAuth;

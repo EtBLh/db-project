@@ -3,6 +3,7 @@
 require_once("includes/db_connect.php");
 require_once("includes/tokengen.php");
 require_once("includes/restful_json.php");
+require_once("includes/check_location.php");
 
 $reqdata = json_req_body();
 if (!$reqdata->token || !$reqdata->uid){
@@ -14,8 +15,16 @@ if (!check_token($reqdata->token, $reqdata->uid)) {
     exit();
 }
 
-$stmt = $conn->prepare('UPDATE user SET longtitude=?, latitude=? WHERE uid = ?');
-$stmt->bind_param("ddi",$reqdata->longtitude, $reqdata->latitude, $reqdata->uid);
+if (!check_loc($reqdata->longtitude, $reqdata->latitude)) {
+    json_res(array(
+        "status" => 7 //location does not meet requiremnt
+    ));
+    exit();
+}
+$location = 'POINT(' . $reqdata->longtitude . ' ' . $reqdata->latitude . ')';
+$stmt = $conn->prepare("UPDATE user SET location = ST_GeomFromText(?) WHERE uid = ?");
+$stmt->bind_param("si",$location, $reqdata->uid);
+
 
 $res = array();
 if ($stmt->execute()){

@@ -1,24 +1,17 @@
 import { useNavigate } from "react-router-dom";
 
 import '../common.scss';
-import './index.scss';
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import useAuth from "../hook/useAuth";
+import useAlert from "../hook/useAlert";
 
-const Index = () => {
+const Login = () => {
     const navigate = useNavigate();
     const [ac, setAc] = useState(""); 
     const [pw, setPw] = useState("");
     const [login, logout, checkAuth, auth] = useAuth();
-
-    useEffect(() => {
-        checkAuth()
-        .then(res => {
-            if (res){
-                navigate('/home');
-            }
-        })
-    }, []);
+    const [show,] = useAlert();
 
     const _login = () => {
         fetch("https://ubereat.nycu.me/api/login.php",{
@@ -36,25 +29,25 @@ const Index = () => {
         .then(res => res.json())
         .then(body => {
             if (body.status !== 0){
-                alert('login failed');
+                show('login failed',"danger");
                 return;
             }
             login(body.uid, body.token);
-            navigate("/home");
+            navigate("/");
+            show("login success!");
         });
     }
 
-    return <>
-        <div className="container">
-            <label>account</label>
-            <input type="text" onChange={ev=>setAc(ev.target.value)} value={ac} />
-            <br/>
-            <label>password</label>
-            <input type="password" onChange={ev=>setPw(ev.target.value)} value={pw} />
-            <br/>
-            <button onClick={_login}>submit</button>
+    return <div className="popup-container">
+        <label>ACCOUNT</label>
+        <input type="text" onChange={ev=>setAc(ev.target.value)} value={ac} />
+        <label>PASSWORD</label>
+        <input type="password" onChange={ev=>setPw(ev.target.value)} value={pw} />
+        <div className="row" style={{textAlign: 'right'}}>
+            <Link style={{textAlign: "right", marginRight: "1rem"}} to="/signup">signup</Link>
+            <button onClick={_login}>Login</button>
         </div>
-    </>
+    </div>
 }
 
-export default Index;
+export default Login;

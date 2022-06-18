@@ -3,6 +3,14 @@
 require_once("includes/db_connect.php");
 require_once("includes/tokengen.php");
 require_once("includes/restful_json.php");
+require_once("includes/loc2pos.php");
+
+/*
+response
+{
+    很多
+}
+*/
 
 $reqdata = json_req_body();
 if (!$reqdata->token || !$reqdata->uid){
@@ -16,25 +24,41 @@ if (!check_token($reqdata->token, $reqdata->uid)) {
     exit();
 }
 
-$sql_query = 'SELECT * FROM store where owner = ?';
+$sql_query = 'SELECT *, ST_AsText(location) as location FROM store WHERE `owner` = ?';
 $stmt = $conn->prepare($sql_query);
 $stmt->bind_param('i', $reqdata->uid);
 
-$res = array();
+$data = array();
+$exist = false;
 if ($stmt->execute()){
     $result = $stmt->get_result();
     $res = mysqli_fetch_array($result);
-    if ($res == null) {
-        $res["exist"] = false;
-    } else {
-        $res["exist"] = true;
-    }
-    $res["status"] = 0;
+    $exist = ($res == []) ? false : true;
+    $pos = loc2pos($res["location"]);
+    $data = [
+        "sid" => $res["sid"],
+        "name" => $res["name"],
+        "class" => $res["class"],
+        "owner" => $res["owner"],
+        "long" => $pos["long"],
+        "lat" => $pos["lat"],
+    ];
 } else {
-    $res = array(
-        'status' => 1,
+    json_res(array(
+        'status' => 3,
         'error' => $stmt->error
-    ); 
+    )); 
 }
 
-json_res($res);
+if ($exist) {
+    json_res(array(
+        'status' => 0,
+        'exist' => $exist,
+        'shop_info' => $data
+    ));
+} else {
+    json_res(array(
+        'status' => 0,
+        'exist' => $exist
+    ));
+}

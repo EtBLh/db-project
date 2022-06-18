@@ -2,17 +2,19 @@ import { useState, useEffect, useDebugValue } from "react";
 import { useNavigate } from "react-router";
 import FileBase64 from 'react-file-base64';
 
-import FoodItem from "../components/foodItem";
+import FoodItem from "../components/storeFoodItem";
 import asyncJsonFetch from "../func/asyncJsonFetch";
 import useAuth from "../hook/useAuth";
 
 import "./shop.scss";
 import "../components/foodItem.scss"
+import useAlert from "../hook/useAlert";
 
 const MyShop = () => {
 
     const navigate = useNavigate();
-    const [login, logout, checkAuth, auth] = useAuth();
+    const [, logout, checkAuth, auth] = useAuth();
+    const [show, ] = useAlert();
     const [shopData, setShopData] = useState({
         exist: false
     });
@@ -30,21 +32,12 @@ const MyShop = () => {
         thumbnail: ""
     }
     const [newFood, setNewFood] = useState(initialNewFood);
-    const [shopNameValidMsg, setShopNameValidMsg] = useState("");
 
     const newShopDataChange = (sdtype, value) => {
         let newState = {...newShopData}; //clone input obj
         newState[sdtype] = value;
         setNewShopData(newState);
-        // if (sdtype == "name"){
-        //     asyncJsonFetch("https://ubereat.nycu.me/check_storename_valid.php",{
-        //         uid: auth.uid, token: auth.token, name: value
-        //     }).then(body => {
-        //         if (body.exist) setShopNameValidMsg("already exists.");
-        //         else setShopNameValidMsg("not exist.");
-        //         console.log(body);
-        //     })
-        // }
+
     }
 
     const newFoodChange = (ftype, value) => {
@@ -60,14 +53,19 @@ const MyShop = () => {
         if (newFood.price === "" || !newFood.price.match(/^[0-9]+$/i)) error = 3;
         if (newFood.thumbnail === "") error = 4;
         if (error !== 0) {
-            alert ("info wrong format, error "+ error);
+            show("info wrong format, error: "+ error, "danger");
             return;
         } else {
             asyncJsonFetch("https://ubereat.nycu.me/api/create_food.php",{
                 ...newFood,
                 uid: auth.uid,
                 token: auth.token
-            }).then(body => getFoodList());
+            }).then(body => {
+                if (body.status === 0){
+                    getFoodList();
+                    show("added successfully!");
+                } else show("error occur :(", "danger");
+            });
             setNewFood(initialNewFood);
         }
     }
@@ -76,17 +74,15 @@ const MyShop = () => {
         asyncJsonFetch("https://ubereat.nycu.me/api/get_user_shop.php",{
             uid: auth.uid, token: auth.token
         }).then(body => {
-            console.log("shopdata", body);
             setShopData(body);
         })
     }
 
     const getFoodList = () => {
+        if (!shopData.shop_info) return;
         asyncJsonFetch("https://ubereat.nycu.me/api/get_food_list.php",{
-            uid: auth.uid, token: auth.token, store: shopData.sid
+            uid: auth.uid, token: auth.token, store: shopData.shop_info.sid
         }).then(body => {
-            console.log("food", body);
-            console.log("sid", shopData.sid);
             setFoodList(body);
         })
     }
@@ -99,28 +95,34 @@ const MyShop = () => {
             long: newShopData.long,
             lat: newShopData.lat,
             class: newShopData.class,
-        }).then(body => console.log(body))
-        .then(getShopData());
+        }).then(body => {
+            if (body.status === 0) {
+                show("created shop successfully");
+                getShopData();
+            } else show("error occured :(", "danger");
+        });
     }
 
     useEffect(() => {
-        checkAuth()
-        .then(res => {
+        if (auth.login) checkAuth().then(res => {
             if (!res){
-                navigate('/');
+                logout();
             }
-        })
+        });
+        else navigate('/');
     },[auth]);
 
-    useEffect(getShopData,[]);
-    useEffect(getFoodList,[shopData]);
+    useEffect(getShopData, []);
+    useEffect(getFoodList, [shopData]);
 
     return <div className="container">
         {
             shopData.exist?shopData?<>
-                <h2>{shopData.name}</h2>
-                position: {shopData.longtitude+", "+shopData.latitude} <br/>
-                class: {shopData.class}
+                <h2>{shopData.shop_info.name}</h2>
+                <div id="info">
+                    <div id="class">{shopData.shop_info.class}</div>
+                    <div id="position">({shopData.shop_info.long+", "+shopData.shop_info.lat})</div>
+                </div>
                 <div className="food-list">
                     {
                         foodList.map((food, idx) => <FoodItem food={food} key={idx} update={getFoodList}/>)
@@ -152,17 +154,27 @@ const MyShop = () => {
                 </div>
             </>:null
             :<>
-                {"you dont have a shop, create a new one?"}
-                <br/>
-                <label>shop name:</label><input id="new-shop-name" value={shopData.name}
-                    onChange={e => newShopDataChange("name", e.target.value)}/>{shopNameValidMsg}<br/>
-                <label>shop longtitude:</label><input id="new-shop-long" value={shopData.long}
-                    onChange={e => newShopDataChange("long", e.target.value)}/><br/>
-                <label>shop latitude:</label><input id="new-shop-lat" value={shopData.lat}
-                    onChange={e => newShopDataChange("lat", e.target.value)}/><br/>
-                <label>shop class:</label><input id="new-shop-class" value={shopData.class}
-                    onChange={e => newShopDataChange("class", e.target.value)}/><br/>
-                <button onClick={newShopRegister}>register</button>
+                <div className="popup" style={{
+                    width: "400px",
+                    position: "absolute",
+                    marginTop: "1rem",
+                    left: "50%",
+                    transform: "translateX(-50%)"
+                }}>
+                    <div className="popup-container">
+                        <h3>Create Shop</h3>
+                        <label>shop name:</label><input id="new-shop-name" value={shopData.name}
+                            onChange={e => newShopDataChange("name", e.target.value)}/>
+                        <label>shop longtitude:</label><input id="new-shop-long" value={shopData.long} type="number"
+                            onChange={e => newShopDataChange("long", e.target.value)}/>
+                        <label>shop latitude:</label><input id="new-shop-lat" value={shopData.lat} type="number"
+                            onChange={e => newShopDataChange("lat", e.target.value)}/>
+                        <label>shop class:</label><input id="new-shop-class" value={shopData.class}
+                            onChange={e => newShopDataChange("class", e.target.value)}/>
+                        <button onClick={newShopRegister}>register</button>
+                    </div>
+                </div>
+                
             </>
         }
     </div>

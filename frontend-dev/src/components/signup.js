@@ -1,6 +1,9 @@
 import '../common.scss';
 import { useState } from "react";
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 import asyncJsonFetch from '../func/asyncJsonFetch';
+import useAlert from '../hook/useAlert';
 
 const Signup = () => {
     const [input, setInput] = useState({
@@ -13,7 +16,9 @@ const Signup = () => {
         lat: 0,
         pwc: ""
     });
+    const navigate = useNavigate();
     const [acValidMsg, setAcValidMsg] = useState("ok");
+    const [show,] = useAlert();
 
     const errorMsg = [  '',
                         'unknown error',
@@ -27,7 +32,7 @@ const Signup = () => {
 
     const req = () => {
         if (input.pw !== input.pwc){
-            alert('password and password comfirm are not identical.');
+            show('password and password comfirm are not identical.', "danger");
             return;
         } 
         fetch("https://ubereat.nycu.me/api/signup.php",{
@@ -42,11 +47,11 @@ const Signup = () => {
         .then(res => res.json())
         .then(body => {
             if (body.status === 0){
-                alert("success!");
+                show("success!");
+                navigate('/login');
             } else {
-                alert(errorMsg[body.status]);
+                show(errorMsg[body.status],"danger");
             }
-            console.log(body);
         });
     }
 
@@ -58,45 +63,43 @@ const Signup = () => {
             asyncJsonFetch("https://ubereat.nycu.me/api/check_account_valid.php",{
                 "ac": value
             }).then(body => {
-                if (body.status == 0 && body.exist){
+                if (body.status === 0 && body.exist){
                     setAcValidMsg("ac already exists :(");
-                } else if (body.status == 2){
+                } else if (body.status === 2){
                     setAcValidMsg("ac empty :(");
                 } else {
                     setAcValidMsg("ok!");
                 }
-                console.log(body);
             })
         }
     }
 
     return <>
-        <div className="container">
-            <label>account</label>
-            <input type="text" onChange={ev=>inputChange("ac",ev.target.value)} value={input.ac} />{acValidMsg}
-            <br/>
+        <div className="popup-container">
+            <div className="row _5050">
+                <label>account</label>
+                <span className="main-color right">{acValidMsg}</span>
+            </div>
+            <input type="text" onChange={ev=>inputChange("ac",ev.target.value)} value={input.ac} />
             <label>password</label>
             <input type="password" onChange={ev=>inputChange("pw",ev.target.value)} value={input.pw} />
-            <br/>
             <label>password confirm</label>
             <input type="password" onChange={ev=>inputChange("pwc",ev.target.value)} value={input.pwc} />
-            <br/>
             <label>first name</label>
             <input type="text" onChange={ev=>inputChange("fname",ev.target.value)} value={input.fname} />
-            <br/>
             <label>last name</label>
             <input type="text" onChange={ev=>inputChange("lname",ev.target.value)} value={input.lname} />
-            <br/>
             <label>phone</label>
-            <input type="text" onChange={ev=>inputChange("phone",ev.target.value)} value={input.phone} />
-            <br/>
+            <input type="number" onChange={ev=>inputChange("phone",ev.target.value)} value={input.phone} />
             <label>longtitude</label>
-            <input type="text" onChange={ev=>inputChange("long",ev.target.value)} value={input.long} />
-            <br/>
+            <input type="number" onChange={ev=>inputChange("long",ev.target.value)} value={input.long} />
             <label>latitude</label>
-            <input type="text" onChange={ev=>inputChange("lat",ev.target.value)} value={input.lat} />
-            <br/>
-            <button onClick={e => req()}>submit</button>
+            <input type="number" onChange={ev=>inputChange("lat",ev.target.value)} value={input.lat} />
+
+            <div className="row" style={{textAlign: 'right'}}>
+                <Link style={{textAlign: "right", marginRight: "1rem"}} to="/login">login</Link>
+                <button onClick={e => req()}>submit</button>
+            </div>
         </div>
     </>
 }

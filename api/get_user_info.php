@@ -1,8 +1,14 @@
 <?php
 
-require_once("includes/db_connect.php");
 require_once("includes/tokengen.php");
 require_once("includes/restful_json.php");
+require_once("includes/get_user_info.php");
+require_once("includes/loc2pos.php");
+
+/**
+ * status 
+ * 1: sql stmt error
+ */
 
 $reqdata = json_req_body();
 if (!$reqdata->token || !$reqdata->uid){
@@ -14,33 +20,32 @@ if (!check_token($reqdata->token, $reqdata->uid)) {
     exit();
 }
 
-$stmt = $conn->prepare('SELECT * FROM user WHERE uid = ?');
-$stmt->bind_param("i", $reqdata->uid);
+$uid = $reqdata->uid;
+$user_data = get_user_info($uid);
+$res = [];
 
-$res = array();
-if ($stmt->execute()){
-    $result = $stmt->get_result();
-    $user_data = $result->fetch_assoc();
-    if ($user_data) {
-        $res = array(
-            'status' => 0,
-            'uid' => $user_data['uid'],
-            'ac' => $user_data['account'],
-            'name' => $user_data['name'],
-            'phone' => $user_data['phone'],
-            'long' => $user_data['longtitude'],
-            'lat' => $user_data['latitude'],
-        );
-    } else {
-        $res = array(
-            'status' => 2 //no such user
-        );
-    }
+if ($user_data === false){
+    $res = array(
+        'status' => 1
+        // 'error' => $stmt->error
+    ); 
+} else if ($user_data !== []) {
+    $pos = loc2pos($user_data["location"]);
+    $res = array(
+        'status' => 0,
+        'uid' => $user_data['uid'],
+        'ac' => $user_data['account'],
+        'name' => $user_data['name'],
+        'phone' => $user_data['phone'],
+        'long' => $pos['long'],
+        'lat' => $pos['lat'],
+        'balance' => $user_data['balance']
+    );
 } else {
     $res = array(
-        'status' => 1,
-        'error' => $stmt->error
-    ); 
+        'status' => 2 //no such user
+    );
 }
 
 json_res($res);
+exit;

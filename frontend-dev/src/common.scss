@@ -1,15 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Racing+Sans+One&display=swap');
-
-$con-width: 800px;
-$con-pad: 1rem;
+@import 'variable';
 
 body, html{
     margin: 0;
     padding: 0px;
     font-size: 16px;
-    background-color: #0B0C10;
+    background-color: #181818;
     font-family: 'Lato', sans-serif;
-    color: #efefef;
+    color: $white;
+    overflow-x: hidden;
+    min-height: 100vh;
+    max-width: 100vw;
 } 
 
 .container{
@@ -19,45 +19,379 @@ body, html{
     padding: 0 $con-pad;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 header{
-    position: fixed;
     display: block;
-    height: 56px;
-    width: $con-width;
-    padding: 0 $con-pad;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    h1{
-        font-family: 'Racing Sans One', cursive;
-        color: #66FCF1;
-        margin: 0;
-        margin-top: 1rem;
+    width: 100vw;
+    background-color: #202020;
+    border-bottom: $border-color 1px solid;
+    text-align: center;
+    .container{
+        height: 56px;
+        width: $con-width;
+        position: relative;
     }
+    h1{
+        position: absolute;
+        font-family: 'Racing Sans One', cursive;
+        color: $blue-green;
+        margin-top: .5rem;
+        left: 0;
+        text-align: left;
+    }
+    #options{
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50%;
+    }
+    #search{
+        position: absolute;
+        width: 80%;
+        left: 0;
+        color: $white;
+        background: $mid-black;
+        border: $border-color 1px solid;
+        border-radius: 1.7rem;
+        height: 1.7rem;
+        margin-top: 1rem;
+        text-align: left;
+        #searchbar-label{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10%;
+            height: 100%;
+            line-height: 1.7rem;
+            text-align: center;
+            opacity: 0.5;
+        }
+        #searchbar{
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(0,0,0,0);
+            border: none;
+            width: 90%;
+            height: 1.7rem;
+            color: #eee;
+            outline: none;
+        }
+    }
+    #filter{
+        margin-top: 1rem;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 20%;
+        height: 1.7rem;
+        line-height: 1.7rem;
+        > span{
+            opacity: 0.8;
+            user-select: none;
+            cursor:pointer;
+        }
+    }
+
     nav{
         position: absolute;
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        width: 50%;
         right: 0;
         top: 0;
         height: 100%;
-        text-align: right;
+        text-align: center;
         align-items: center;
-        a {
+        .link {
+            .click-area{
+                width: 100%;
+                height: 100%;
+            }
+            a{
+                font-size: 1.2rem;
+                color: #ccc;
+            }
+            width: 56px;
             height: 100%;
             line-height: 56px;
-            font-size: 1.2rem;
-            margin-left: auto;
-            color: #ccc;
             font-weight: 500;
             text-decoration: none;
+            position: relative;
+            #user-prompt{
+                width: 300px;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                height: auto;
+            }
+            #cart{
+                width: 400px;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                height: auto;
+            }
+        }
+    }
+
+    #filter-options{
+        border-top: 1px $border-color solid;
+        height: 40px;
+        .container{
+            height: 100%;
+            text-align: center;
+            div{
+                display: inline-block;
+                height: 100%;
+                padding: 0 1.5rem;
+                svg{
+                    opacity: 0.8;
+                    padding: 0 .5rem;
+                }
+            }
+            select, input{
+                height: 100%;
+                background: rgba(0,0,0,0);
+                color: $white;
+                height: 100%;
+                border: none;
+                outline: none;
+                font-size: 1rem;
+                option{
+                    background-color: $mid-black;
+                    color: $white;
+                }
+            }
+            #price-range span{
+                margin-right: .8rem;
+                height: 100%;
+                line-height: 40px;
+            }
+            #price-range input{
+                width: 4rem;
+                -moz-appearance: textfield;
+            }
+            input::-webkit-inner-spin-button{
+                -webkit-appearance: none;
+                margin: 0;
+            }
         }
     }
 }
 
-.header-gap{
-    display: block;
-    height: 56px;
+.popup{
+    background-color: $gray;
+    border: 1px solid $border-color;
+    border-radius: .3rem;
+    filter: drop-shadow(0 0 1rem rgba(0,0,0,0.5));
+    z-index: 100;
+}
+
+.popup-container{
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    overflow: hidden;
+    color: $white;
+    h3{
+        font-size: 1.5rem;
+        margin: 0;
+        text-align: left;
+        line-height: 1.7rem;
+        margin-bottom: .4rem;
+    }
+    h4{
+        display: inline-block;
+        margin: 0;
+        text-align: left;
+        font-size: 1.3rem;
+        margin-bottom: .4rem;
+    }
+    hr{
+        width: calc(100% + 2rem);
+        transform: translateX(-1rem);
+        border-color: $border-color;
+    }
+    label, input, button{
+        font-size: 1rem;
+        color: $white;  
+        display: block;
+    }
+    label{
+        text-align: left;
+        font-size: .8rem;
+        width: 100%;
+        line-height: .8rem;
+        margin-bottom: .2rem;
+        opacity: .8;
+    }
+    input{
+        width: 100%;
+        padding: .3rem;
+        background: $mid-black;
+        font-size: 1.2rem;
+        border: 1px solid $border-color;
+        margin-bottom: 1rem;
+        border-radius: .3rem;
+    }
+    button{
+        margin-right: 0;
+        margin-left: auto;
+        margin-bottom: 1rem; 
+        background: $blue-green;
+        color: black;
+        border: none;
+        border-radius: .3rem;
+        padding: .3rem 1.2rem;
+        font-size: 1.2rem;
+        filter: drop-shadow(0 0 .5rem rgba($blue-green, 0.5));
+    }
+    button.secondary{
+        background: $sec-color;
+        filter: drop-shadow(0 0 .5rem rgba($sec-color, 0.5));
+    }
+    button.danger{
+        background: $danger-color;
+        filter: drop-shadow(0 0 .5rem rgba($danger-color, 0.5));
+    }
+    button.low-profile{
+        background: $mid-black;
+        color: $white;
+    }
+    a{
+        font-size: 1.2rem;
+        line-height: 1.2rem;
+        text-decoration: underline;
+    }
+    .row{
+        font-size: 0;
+        text-align: left;
+        display: block;
+        padding: 0;
+        margin: 0;
+        margin-bottom: .3rem;
+        height: auto;
+        line-height: normal;
+        button, a, span{
+            display: inline-block;
+        }
+        span {
+            font-size: 1rem;
+        }
+    }
+    .row._5050{
+        > span, > div, > h4, > h3, > button, > label{
+            width: 50%;
+            display: inline-block;
+        }
+        span.right{
+            text-align: right;
+        }
+    }
+    button.full-row-btn{
+        width: calc(100% + 2rem);
+        transform: translateX(-1rem);
+        display: block;
+        border-radius: 0;
+        padding: .5rem 1rem;
+        margin: 0;
+        text-align: left;
+        background-color: $gray;
+        color: $white;
+        font-size: 1.2rem;
+        filter: none;
+    }
+    button.full-row-btn:hover{
+        background-color: #303030;
+    }
+    button.touch-bottom{
+        margin-top: 1rem;
+        margin-bottom: -1rem;
+        border-radius: 0 0 .3rem .3rem;
+    }
+    .main-color{
+        color: $blue-green;
+    }
+    .sec-color{
+        color: $sec-color;
+    }
+    .danger-color{
+        color: $danger-color;
+    }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+
+.modal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 2000;
+    border-radius: .2rem;
+    transform: translate(-50%, -50%);
+    background-color: $mid-black;
+    border: 1px solid $border-color;
+    min-width: 400px;
+    filter: drop-shadow(0 0 .5rem black);
+    .close{
+        position: absolute;
+        right: .5rem;
+        top: .5rem;
+        font-size: 1.2rem;
+        z-index: 2001;
+    }
+}
+
+.alert{
+    position: fixed;
+    top: -10vh;
+    left: 50vw;
+    transform: translateX(-50%);
+    padding: .5rem 1rem;
+    text-align: center;
+    z-index: 1000;
+    background: $gray;
+    font-size: 1.2rem;
+    border-radius: .2rem;
+    border: 1px solid $blue-green;
+    &.show{
+        top: 5vh;
+        transition: top 0.5s ease-in-out;
+    }
+    &.hide{
+        top: -10vh;
+        transition: top 0.5s ease-in-out;
+    }
+    &.danger{
+        border: 1px solid $danger-color;
+    }
+    &.secondary{
+        border: 1px solid $sec-color;
+    }
+    &.warn{
+        border: 1px solid $warn-color;
+    }
+    .icon{
+        font-size: 1.2rem;
+        padding-right: .7rem;
+        color: $blue-green;
+        display: inline-block;
+    }
+    &.danger .icon{
+        color: $danger-color;
+    }
+    &.secondary .icon{
+        color: $sec-color;
+    }
+    &.warn .icon{
+        color: $warn-color;
+    }
 }

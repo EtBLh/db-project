@@ -1,0 +1,29 @@
+.container{
+    position: relative;
+}
+
+h2{
+    font-family: 'Racing Sans One', cursive;
+    font-size: 2rem;
+}
+
+#info{
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.5;
+    text-align: right;
+    font-family: 'Racing Sans One', cursive;
+    #class{
+        line-height: 4rem;
+        margin-top: -2rem;
+        font-size: 4rem;
+    }
+    #position{
+        font-size: 1.5rem;
+    }
+}
+
+.food-list{
+    vertical-align: top;
+}

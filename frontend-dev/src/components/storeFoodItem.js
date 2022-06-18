@@ -6,11 +6,11 @@ import { useState } from "react";
 import asyncJsonFetch from "../func/asyncJsonFetch";
 import useAuth from "../hook/useAuth";
 
-const FoodItem = (prop) => {
+const FoodItem = (props) => {
     const [login, logout, checkAuth, auth] = useAuth();
     const [newData, setNewData] = useState({
-        price: prop.price,
-        amount: prop.amount
+        price: props.price,
+        amount: props.amount
     });
 
     const newDataChange = (ndtype, value) => {
@@ -23,8 +23,8 @@ const FoodItem = (prop) => {
         asyncJsonFetch("https://ubereat.nycu.me/api/delete_food.php",{
             token: auth.token,
             uid: auth.uid,
-            name: prop.food.name
-        }).then(body => prop.update())
+            name: props.food.name
+        }).then(body => props.update())
     }
 
     const update_food = () => {
@@ -32,21 +32,21 @@ const FoodItem = (prop) => {
         asyncJsonFetch("https://ubereat.nycu.me/api/update_food.php",{
             token: auth.token,
             uid: auth.uid,
-            name: prop.food.name,
+            name: props.food.name,
             price: newData.price,
             amount: newData.amount
-        }).then(body => prop.update())
+        }).then(body => props.update())
     }
 
-    return <div className="food-item">
-        <img className="food-img" src={prop.food.thumbnail}/>
+    return <div className={`food-item modify ${props.food.amount?null:"out-of-stock"}`}>
+        <img className="food-img" src={props.food.thumbnail} alt={props.food.name}/>
         <div className="text-container">
-            <span className="food-name">{prop.food.name}</span>
-            <span className="food-price">price: {prop.food.price}
+            <span className="food-name">{props.food.name}</span>
+            <span className="food-price">price: {props.food.price}
                 <input value={newData.price}
                 onChange={e => newDataChange("price", e.target.value)}/>
             </span>
-            <span className="food-amount">amount: {prop.food.amount}
+            <span className="food-amount">amount: {props.food.amount}
                 <input value={newData.amount}
                 onChange={e => newDataChange("amount", e.target.value)}/>
             </span>

@@ -3,6 +3,7 @@
 require_once("includes/db_connect.php");
 require_once("includes/tokengen.php");
 require_once("includes/restful_json.php");
+require_once("includes/get_shop_info.php");
 
 $reqdata = json_req_body();
 if (!$reqdata->token || !$reqdata->uid){
@@ -16,22 +17,14 @@ if (!check_token($reqdata->token, $reqdata->uid)) {
     exit();
 }
 
-$sql_query = 'SELECT * FROM store where sid = ?';
-$stmt = $conn->prepare($sql_query);
-$stmt->bind_param('i', $reqdata->store);
-
-$res = array();
-if ($stmt->execute()){
-    $result = $stmt->get_result();
-    $res = [];
-    while($row = mysqli_fetch_array($result)){
-        $res[] = $row;
-    }
+$sid = $reqdata->store;
+$res = get_shop_info($sid);
+if ($res){
+    $res["status"] = 0;
 } else {
-    $res = array(
-        'status' => 1,
-        'error' => $stmt->error
-    ); 
+    $res = [
+        "status" => 1
+    ];
 }
 
 json_res($res);

@@ -10,7 +10,8 @@ export const userDataSlice = createSlice({
         account: null,
         lat: null,
         long: null,
-        phone: null
+        phone: null,
+        show: false
     },
     reducers: {
         _login: (state, action) => {
@@ -24,15 +25,19 @@ export const userDataSlice = createSlice({
             state.token = "";
         },
         _setData: (state, action) => {
+            state.ac = action.payload.ac;
             state.name = action.payload.name;
             state.long = action.payload.long;
             state.lat = action.payload.lat;
             state.phone = action.payload.phone;
             state.account = action.payload.account;
-        }
+            state.balance = action.payload.balance
+        },
+        showUserData: state => {state.show = true},
+        hideUserData: state => {state.show = false},
     },
 });
 
 export const selectUserData = (state) => state.userData;
-export const {_login, _logout, _setData} = userDataSlice.actions;
+export const {_login, _logout, _setData, showUserData, hideUserData} = userDataSlice.actions;
 export default userDataSlice.reducer;

@@ -7,12 +7,14 @@ require_once("includes/restful_json.php");
 $reqdata = json_req_body();
 if (!$reqdata->token || !$reqdata->uid){
     json_res([
-        "data" => var_export($reqdata, true)
+        'status' => 1
     ]);
     exit();
 }
 if (!check_token($reqdata->token, $reqdata->uid)) {
-    json_res($reqdata);
+    json_res([
+        'status' => 2
+    ]);
     exit();
 }
 
@@ -36,7 +38,7 @@ if ($stmt->execute()){
     }
 } else {
     $res = array(
-        'status' => 1,
+        'status' => 3,
         'error' => $stmt->error
     ); 
 }

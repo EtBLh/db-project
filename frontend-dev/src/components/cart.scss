@@ -1,0 +1,59 @@
+@import '../variable.scss';
+
+.cart-item{
+    user-select:none;
+    *{
+        user-select: none;
+    }
+    .food-img{
+        display: inline-block;
+        width: 10%;
+        background-size: cover;
+    }
+    .text-container{
+        display: inline-block;
+        width: 90%;
+        .food-name{
+            font-size: 1.6rem;
+            display: inline-block;
+            width: 50%;
+        }
+        .food-price{
+            font-size: 1.6rem;
+            display: inline-block;
+            width: 25%;
+            text-align: left;
+        }
+        .food-quantity{
+            display: inline-block;
+            width: 25%;
+            font-size: 1.6rem;
+            span{
+                font-size: 1.6rem;
+                border-radius: 100%;
+                background-color: $mid-black;
+                color: $white;
+                width: 1.6rem;
+                height: 1.6rem;
+                display: inline-block;
+                line-height: 2rem;
+                vertical-align: middle;
+                text-align: center;
+                border: 1px solid $border-color;
+            }
+            span:nth-child(1){
+
+            }
+        }
+    }
+}
+
+#delivery{
+    display: inline-block;
+    width: auto;
+    & ~label{
+        font-size: 1rem;
+        display: inline-block;
+        width: auto;
+    }
+}

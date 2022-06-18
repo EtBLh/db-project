@@ -1,31 +1,37 @@
+@import '../variable';
+
 .shop-card{
-    background-color: #333;
-    border-radius: 1rem;
-    border: 1px solid #555;
+    background-color: $gray;
+    border-radius: .2rem;
+    border: 1px solid $border-color;
     text-decoration: none;
     color: white;
     padding: .5rem 1rem;
-    width: 250px;
-    height: 60px;
-    margin-right: 1rem;
+    width: 240px;
+    height: 100px;
+    margin-right: .7rem;
+    margin-bottom: .7rem;
+    z-index: 1;
     position: relative;
+    border-bottom: $blue-green 5px solid;
     span{
         display: block;
         text-decoration: none;
     }
-    filter: drop-shadow(0 0 1rem black);
     .shop-name{
         font-size: 1.7rem;
         text-decoration: none;
     }
     .shop-class{
         position: absolute;
-        right: 1rem;
-        top: .5rem;
-        color: #eee;
-        font-size: 1.2rem;
+        right: 0;
+        bottom: 0;
+        color: rgba(255,255,255,0.2);
+        font-family: 'Racing Sans One', cursive;
+        text-align: right;
+        font-size: 3rem;
     }
-    .shop-position{
+    .shop-distance{
         color: #eee;
         font-size: .8rem;
     }

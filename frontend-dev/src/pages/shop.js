@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router";
 import FoodItem from "../components/customerFoodItem";
 import asyncJsonFetch from "../func/asyncJsonFetch";
 import useAuth from "../hook/useAuth";
+import useAlert from "../hook/useAlert";
 
 import "./shop.scss";
 import "../components/foodItem.scss"
@@ -11,20 +12,19 @@ import "../components/foodItem.scss"
 const Shop = () => {
 
     let { storeid } = useParams();
+    let [show,] = useAlert();
 
     const navigate = useNavigate();
-    const [login, logout, checkAuth, auth] = useAuth();
-    const [shopData, setShopData] = useState({
-        exist: false
-    });
+    const [, , checkAuth, auth] = useAuth();
+    const [shopData, setShopData] = useState({});
     const [foodList, setFoodList] = useState([]);
 
     const getShopData = () => {
         asyncJsonFetch("https://ubereat.nycu.me/api/get_shop_data.php",{
             uid: auth.uid, token: auth.token, store: storeid
         }).then(body => {
-            console.log("shopdata", body);
-            setShopData(body);
+            if (body.status === 0)
+                setShopData(body);
         })
     }
 
@@ -32,33 +32,41 @@ const Shop = () => {
         asyncJsonFetch("https://ubereat.nycu.me/api/get_food_list.php",{
             uid: auth.uid, token: auth.token, store: storeid
         }).then(body => {
-            console.log("food", body);
-            console.log("sid", shopData.sid);
+            if (body.status === 2){
+                return;
+            }
             setFoodList(body);
         })
     }
 
     useEffect(() => {
-        checkAuth()
-        .then(res => {
+        checkAuth().then(res => {
             if (!res){
+                show("login before accessing to shop page", "warn");
                 navigate('/');
             }
         })
     },[auth]);
 
-    useEffect(getShopData,[]);
+    useEffect(() => {
+        if (auth.login)
+            getShopData();
+    },[]);
     useEffect(getFoodList,[shopData]);
 
     return <div className="container">
         {
             shopData?<>
                 <h2>{shopData.name}</h2>
-                position: {shopData.longtitude+", "+shopData.latitude} <br/>
-                class: {shopData.class}
+                <div id="info">
+                    <div id="class">{shopData.class}</div>
+                    <div id="position">({shopData.long+", "+shopData.lat})</div>
+                </div>
                 <div className="food-list">
                     {
-                        foodList.map((food, idx) => <FoodItem food={food} key={idx} update={getFoodList}/>)
+                        foodList.length?
+                            foodList.map((food, idx) => <FoodItem food={food} key={idx} update={getFoodList} storeid={storeid} storeName={shopData.name}/>)
+                            :null
                     }
                 </div>
             </>:null

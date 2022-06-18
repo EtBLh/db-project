@@ -1,0 +1,140 @@
+@import '../variable.scss';
+
+.order-list{
+    width: 100%;
+    border: none;
+    th{
+        font-size: 1.1rem;
+    }
+    td, th {
+        text-align: center;
+        vertical-align: middle;
+        height: 100%;
+        padding-top: .7rem;
+        padding-bottom: .7rem;
+    }
+    td,th{
+        border-bottom: 1px solid $border-color;
+    }
+    td:last-child{
+        border-right: 1px solid $border-color;
+    }
+    td:first-child{
+        padding-left: .3rem;
+    }
+}
+
+.order-item{
+    cursor: pointer;
+    border-bottom: 1px solid $border-color;
+    position: relative;
+    &::after{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: .2rem;
+        height: 100%;
+    }
+    &._1::after{
+        background-color: $blue-green;
+    }
+    &._3::after{
+        background-color: $sec-color;
+    }
+    &._2::after{
+        background-color: $danger-color;
+    }
+    &:hover{
+        background-color: $gray;
+    }
+    .select{
+        display: none;
+        width: auto;
+        margin-right: 1rem;
+        input{
+            display: inline;
+        }
+    }
+    .detail{
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    &.selected{
+        background-color: #505050;
+    }
+    &.selected:hover{
+        background-color: #606060;
+    }
+}
+
+.modal table{
+    width: calc(100%);
+    border: none;
+    text-align: left;
+    tr{
+        td{
+            padding: .2rem;
+        }
+        td:first-child, th:first-child{
+            padding-left: 1rem;
+        }
+        td:last-child, th:last-child{
+            padding-right: 1rem;
+        }
+        th{
+            font-size: 1.1rem;
+            padding: .5rem .2rem;
+        }
+        .img{
+            width: 2rem;
+            img{
+                width: 100%;
+            }
+        }
+    }
+    tr.data:nth-child(odd){
+        background-color: $gray;
+    }
+    tr.data:nth-child(even){
+        background-color: $mid-black;
+    }
+  
+}
+
+.action{
+    text-align: right;
+}
+
+button.update{
+    margin: 1rem;
+    margin-right: 0;
+    display: inline-block;
+    font-size: 1.2rem;
+    background-color: $gray;
+    border: 1px solid $border-color;
+    border-left: $danger-color 3px solid;
+    color: $white;
+    padding: .3rem 1rem;
+    border-radius: .2rem;
+}
+button.update.done{
+    border-left: $sec-color 3px solid; 
+}
+
+button.update:hover{
+    background-color: #303030;
+}
+
+.filter{
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    color: #ddd;
+    select{
+        font-size: 1.2rem;
+        border-radius: .2rem;
+        background-color: $gray;
+        color: $white;
+        padding: .2rem .5rem;
+    }
+}
