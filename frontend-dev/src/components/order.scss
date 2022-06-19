@@ -28,22 +28,17 @@
     cursor: pointer;
     border-bottom: 1px solid $border-color;
     position: relative;
-    &::after{
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: .2rem;
-        height: 100%;
+    td:first-child{
+        border-left: .2rem solid $mid-black;
     }
-    &._1::after{
-        background-color: $blue-green;
+    &._1 td:first-child{
+        border-left: .2rem solid $blue-green;
     }
-    &._3::after{
-        background-color: $sec-color;
+    &._3 td:first-child{
+        border-left: .2rem solid $sec-color;
     }
-    &._2::after{
-        background-color: $danger-color;
+    &._2 td:first-child{
+        border-left: .2rem solid $danger-color;
     }
     &:hover{
         background-color: $gray;

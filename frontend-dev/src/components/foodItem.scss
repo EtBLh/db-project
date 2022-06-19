@@ -56,6 +56,9 @@
         bottom: .5rem;
         right: .5rem;
     }
+    button:hover{
+        background-color: $gray;
+    }
     &.out-of-stock button.add{
         text-decoration: line-through;
     }

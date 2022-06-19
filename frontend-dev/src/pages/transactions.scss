@@ -29,7 +29,7 @@
     cursor: pointer;
     border-bottom: 1px solid $border-color;
     position: relative;
-    &::after{
+    & td:first-child::after{
         content: '';
         position: absolute;
         top: 0;
@@ -37,13 +37,13 @@
         width: .2rem;
         height: 100%;
     }
-    &.payment::after{
+    &.payment td:first-child::after{
         background-color: $blue-green;
     }
-    &.recharge::after{
+    &.recharge td:first-child::after{
         background-color: $sec-color;
     }
-    &.refund::after{
+    &.refund td:first-child::after{
         background-color: $danger-color;
     }
     &:hover{

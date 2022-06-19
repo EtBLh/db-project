@@ -1,49 +1,99 @@
 @import '../variable.scss';
 
+table{
+    table-layout: fixed;
+}
+
 .cart-item{
     user-select:none;
+    vertical-align: middle;
+    position: relative;
+    text-align: left;
+    width: 100%;
     *{
         user-select: none;
     }
     .food-img{
-        display: inline-block;
-        width: 10%;
-        background-size: cover;
+        width: 15%;
+        img{
+            width: 100%;
+            background-size: cover;
+        }
     }
-    .text-container{
+    .food-name{
+        width: 40%;
+        padding: 0 .2rem;
+        height: 100%;
         display: inline-block;
-        width: 90%;
-        .food-name{
-            font-size: 1.6rem;
+        font-size: 1.2rem;
+        padding-left: .5rem;
+    }
+    .food-price{
+        width: 25%;
+        padding: 0 .2rem;
+        height: 100%;
+        display: inline-block;
+        font-size: 1.2rem;
+        text-align: left;
+    }
+    .food-quantity{
+        width: 35%;
+        padding: 0 .2rem;
+        line-height: 1.2rem;
+        height: 100%;
+        display: inline-block;
+        text-align: center;
+        font-size: 0;
+        div{
+            font-size: 1rem;
+            border-radius: 100%;
+            background-color: $mid-black;
+            color: $white;
+            width: 1.6rem;
+            height: 1.6rem;
             display: inline-block;
-            width: 50%;
+            line-height: 1.6rem;
+            text-align: center;
+            border: 1px solid $border-color;
         }
-        .food-price{
-            font-size: 1.6rem;
-            display: inline-block;
-            width: 25%;
-            text-align: left;
+        div:hover{
+            background-color: $gray;
         }
-        .food-quantity{
-            display: inline-block;
-            width: 25%;
+        span{
+            height: 1.6rem;
+            line-height: 1.6rem;
             font-size: 1.6rem;
-            span{
-                font-size: 1.6rem;
-                border-radius: 100%;
-                background-color: $mid-black;
-                color: $white;
-                width: 1.6rem;
-                height: 1.6rem;
-                display: inline-block;
-                line-height: 2rem;
-                vertical-align: middle;
-                text-align: center;
-                border: 1px solid $border-color;
-            }
-            span:nth-child(1){
+            padding: 0 .5rem;
+        }
+    }
+}
 
-            }
+.popup-container{
+    .row.fee{
+        text-align: left;
+        opacity: .4;
+        .fee-label{
+            text-align: left;
+            color: #aaa;
+            font-size: 1rem;
+        }
+        span{
+            text-align: right;
+            font-size: 1.2rem;
+        }
+    }
+    .row.total{
+        opacity: 1;
+    }
+    button#order{
+        margin-bottom: 0;
+        margin-top: 1rem;
+        border: 1px solid $border-color;
+        color: $white;
+        background-color: $mid-black;
+        filter: none;
+        &:hover{
+            background-color: $gray;
         }
     }
 }

@@ -67,21 +67,25 @@ const Cart = () => {
     } else return <div className="popup-container">
         <h3>{cart.storeName}</h3>
         <hr/>
-        {
-            cart.foods?.map((food, idx) => 
-                <CartItem food={food} key={idx}/>
-            )
-        }
-        <div className="row">
-            <span>delivery fee:</span>
+        <table cellSpacing={0} cellPadding={0}>
+            <tbody>
+            {
+                cart.foods?.map((food, idx) => 
+                    <CartItem food={food} key={idx}/>
+                )
+            }
+            </tbody>
+        </table>
+        <div className="row fee _5050">
+            <span class="fee-label">DELEVERY FEE</span>
             <span>${preview.delivery_fee}</span>
         </div>
-        <div className="row">
-            <span>subtotal:</span>
+        <div className="row fee _5050">
+            <span class="fee-label">SUBTOTAL</span>
             <span>${preview.subtotal}</span>
         </div>
-        <div className="row">
-            <span>total:</span>
+        <div className="row fee total _5050">
+            <span class="fee-label">TOTAL</span>
             <span>${preview.total}</span>
         </div>
         <div className="row _5050">
@@ -91,7 +95,7 @@ const Cart = () => {
                 }}/>
                 <label name="delivery">Delivery</label>
             </div>
-            <button onClick={placeOrder}>place order</button>
+            <button id="order" onClick={placeOrder}>place order</button>
         </div>
     </div>
 }

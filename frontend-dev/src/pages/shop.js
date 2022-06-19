@@ -8,6 +8,8 @@ import useAlert from "../hook/useAlert";
 
 import "./shop.scss";
 import "../components/foodItem.scss"
+import { useSelector } from "react-redux";
+import { selectCart } from "../stores/cart";
 
 const Shop = () => {
 
@@ -18,6 +20,7 @@ const Shop = () => {
     const [, , checkAuth, auth] = useAuth();
     const [shopData, setShopData] = useState({});
     const [foodList, setFoodList] = useState([]);
+    const cart = useSelector(selectCart);
 
     const getShopData = () => {
         asyncJsonFetch("https://ubereat.nycu.me/api/get_shop_data.php",{
@@ -44,14 +47,11 @@ const Shop = () => {
             if (!res){
                 show("login before accessing to shop page", "warn");
                 navigate('/');
-            }
+            } else 
+                getShopData();
         })
-    },[auth]);
+    },[auth.login, cart]);
 
-    useEffect(() => {
-        if (auth.login)
-            getShopData();
-    },[]);
     useEffect(getFoodList,[shopData]);
 
     return <div className="container">

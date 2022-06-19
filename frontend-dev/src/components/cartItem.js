@@ -9,26 +9,26 @@ import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 const CartItem = (props) => {
     const dispatch = useDispatch();
 
-    return <div className="cart-item row">
-        <img className="food-img" src={props.food.thumbnail} alt={props.food.name}/>
-        <div className="text-container">
-            <span className="food-name">{props.food.name}</span>
-            <span className="food-price">${props.food.price * props.food.quantity}</span>
-            <div className="food-quantity">
-                <span onClick={() => {
-                    dispatch(itemMinusMinus({fid: props.food.fid}));
-                }}>
-                    <FontAwesomeIcon icon={faMinus} />
-                </span>
-                {props.food.quantity}
-                <span onClick={() => {
-                    dispatch(itemPlusPlus({fid: props.food.fid}));
-                }}>
-                    <FontAwesomeIcon icon={faPlus} />
-                </span>
+    return <tr className="cart-item">
+        <td className="food-img">
+            <img src={props.food.thumbnail} alt={props.food.name}/>
+        </td>
+        <td className="food-name">{props.food.name}</td>
+        <td className="food-price">${props.food.price * props.food.quantity}</td>
+        <td className="food-quantity">
+            <div onClick={() => {
+                dispatch(itemMinusMinus({fid: props.food.fid}));
+            }}>
+                <FontAwesomeIcon icon={faMinus} />
             </div>
-        </div>
-    </div>
+            <span>{props.food.quantity}</span>
+            <div onClick={() => {
+                dispatch(itemPlusPlus({fid: props.food.fid}));
+            }}>
+                <FontAwesomeIcon icon={faPlus} />
+            </div>
+        </td>
+    </tr>
 }
 
 export default CartItem;
